@@ -1,6 +1,9 @@
 package com.ortheon.mariobros;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ortheon.mariobros.screens.PlayScreen;
 
@@ -16,10 +19,17 @@ public class MarioBros extends Game {
 	public static final short COIN_BIT 		= 8;
 	public static final short DESTROYED_BIT = 16;
 
+	public static AssetManager manager;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		manager = new AssetManager();
+		manager.load("audio/music/mario_music.ogg", Music.class);
+		manager.load("audio/sounds/coin.wav", Sound.class);
+		manager.load("audio/sounds/bump.wav", Sound.class);
+		manager.load("audio/sounds/breakblock.wav", Sound.class);
+		manager.finishLoading();
 		setScreen(new PlayScreen(this));
 	}
 
@@ -27,10 +37,14 @@ public class MarioBros extends Game {
 	public void render () {
 		//delegetes render to playscreen??
 		super.render();
+
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
+		manager.dispose();
 	}
+
+
 }

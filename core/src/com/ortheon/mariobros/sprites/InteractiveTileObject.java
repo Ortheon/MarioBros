@@ -53,7 +53,7 @@ public abstract class InteractiveTileObject {
     }
 
     public TiledMapTileLayer.Cell getCell(){
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
         //tu jest kurwa blad
         int x = (int) (this.body.getPosition().x * MarioBros.PPM / 16);
         int y = (int)(this.body.getPosition().y * MarioBros.PPM / 16);
