@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ortheon.mariobros.MarioBros;
 import com.ortheon.mariobros.scenes.Hud;
+import com.ortheon.mariobros.sprites.Goomba;
 import com.ortheon.mariobros.sprites.Mario;
 import com.ortheon.mariobros.tools.B2WorldCreator;
 import com.ortheon.mariobros.tools.WorldContactListener;
@@ -36,6 +37,7 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
 
     private Mario player;
+    private Goomba goomba;
     private TextureAtlas atlas;
     private Music music;
 
@@ -57,13 +59,14 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
 
 
-        new B2WorldCreator(world, map);
-        player = new Mario(world, this);
+        new B2WorldCreator(this);
+        player = new Mario( this);
         world.setContactListener(new WorldContactListener());
 
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.play();
+        goomba = new Goomba(this, .64f,.32f);
     }
 
     public TextureAtlas getAtlas() {
@@ -85,6 +88,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        goomba.draw(game.batch);
         game.batch.end();
 
         //where the camera is? what can it se?
@@ -99,6 +103,13 @@ public class PlayScreen implements Screen {
     gamePort.update(width,height);
     }
 
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public World getWorld() {
+        return world;
+    }
     @Override
     public void pause() {
 
@@ -129,6 +140,7 @@ public class PlayScreen implements Screen {
         world.step(1/60f, 6,2); //przeczytaj
         hud.update(dt);
         player.update(dt);
+        goomba.update(dt);
         gamecam.position.x = player.b2body.getPosition().x;
         gamecam.update();
         renderer.setView(gamecam); //render only what game camera can see
