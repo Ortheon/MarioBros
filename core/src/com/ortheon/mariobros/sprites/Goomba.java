@@ -1,6 +1,7 @@
 package com.ortheon.mariobros.sprites;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -53,7 +54,7 @@ public class Goomba extends Enemy {
         head.set(vertice);
 
         fdef.shape = head;
-        fdef.restitution = 0.5f;
+        fdef.restitution = 0.5f; //dzieki temu odbija sie mario
         fdef.filter.categoryBits = MarioBros.ENEMY_HEAD_BIT;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -85,9 +86,17 @@ public class Goomba extends Enemy {
             world.destroyBody(b2body);
             destoryed = true;
             setRegion(new TextureRegion(screen.getAtlas().findRegion("goomba"), 32, 0, 16, 16));
+            //we want to know how long goomba was dead
+            stateTime = 0;
         } else if (!destoryed) {
+            b2body.setLinearVelocity(velocity); // dzieki temu chodzi
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
             setRegion((TextureRegion) walkAnimation.getKeyFrame(stateTime, true));
         }
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        if(!destoryed || stateTime<1) super.draw(batch);
     }
 }

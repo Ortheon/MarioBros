@@ -1,5 +1,6 @@
 package com.ortheon.mariobros.tools;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.ortheon.mariobros.MarioBros;
 import com.ortheon.mariobros.sprites.Enemy;
 import com.ortheon.mariobros.sprites.InteractiveTileObject;
+import com.ortheon.mariobros.sprites.Mario;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -30,8 +32,18 @@ public class WorldContactListener implements ContactListener {
                 if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT) {
                     ((Enemy) fixA.getUserData()).hitOnHead();
                 }
-                else if (fixB.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT)
+                else
                     ((Enemy) fixB.getUserData()).hitOnHead();
+                break;
+            case MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT:
+                if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT) {
+                    ((Enemy) fixA.getUserData()).reverseVelocity(true,false);
+                }
+                else
+                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+            case MarioBros.ENEMY_BIT | MarioBros.MARIO_BIT:
+                Gdx.app.log("Mario", "DIED");
         }
     }
 
